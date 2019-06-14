@@ -76,7 +76,7 @@ spec:
       component: bookkeeper
       cluster: local
   serviceName: "bookkeeper"
-  replicas: 1
+  replicas: 2
   template:
     metadata:
         labels:
