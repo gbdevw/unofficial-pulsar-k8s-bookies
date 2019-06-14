@@ -1,0 +1,231 @@
+# Define local persistent volumes for the nodes of our cluster (Cecotepe)
+
+# First local persistent volume that should be dedicated to a bookie hosted on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker1-local-bookie1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: fast-local
+  local:
+    path: /bookie1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-1
+---
+# Second local persistent volume that should be dedicated to a bookie hosted on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker1-local-bookie2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: fast-local
+  local:
+    path: /bookie2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-1
+---
+# A local persistent volume that can be used by a pod scheduled on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker1-local-data1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-local
+  local:
+    path: /data1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-1
+---
+# A local persistent volume that can be used by a pod scheduled on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker1-local-data2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-local
+  local:
+    path: /data2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-1
+---
+# A local persistent volume that can be used by a pod scheduled on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker1-local-data3
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-local
+  local:
+    path: /data3
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-1
+---
+# First local persistent volume that should be dedicated to a bookie hosted on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker2-local-bookie1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: fast-local
+  local:
+    path: /bookie1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-2
+---
+# Second local persistent volume that should be dedicated to a bookie hosted on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker2-local-bookie2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: fast-local
+  local:
+    path: /bookie2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-2
+---
+# A local persistent volume that can be used by a pod scheduled on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker2-local-data1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-local
+  local:
+    path: /data1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-2
+---
+# A local persistent volume that can be used by a pod scheduled on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker2-local-data2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-local
+  local:
+    path: /data2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-2
+---
+# A local persistent volume that can be used by a pod scheduled on the node
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: worker2-local-data3
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard-local
+  local:
+    path: /data3
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ubuntu-k8s-worker-2
