@@ -118,7 +118,7 @@ kubectl scale statefulset bookie --replicas=2
 
 ### Known issues
 
-1. You must NOT ask for more bookies than your cluster can initially handle
+1. You must NOT ask for more bookies than your cluster can handle when deploying the stateful set
 
 For example, if your cluster can handle two bookies and that you ask for 3 replicas during the INITIAL deployment of the stateful set, you will run into troubles : Bookies will be stuck in a crash loop (reason unknown).
 
