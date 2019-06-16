@@ -113,5 +113,5 @@ kubectl apply -f https://raw.githubusercontent.com/guillaume-braibant/unofficial
 5. Scale the Stateful Set
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/guillaume-braibant/unofficial-pulsar-k8s-bookies/master/bookie-alternative.yaml
+kubectl scale statefulset bookie --replicas=2
 ```
