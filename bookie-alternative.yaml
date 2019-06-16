@@ -19,14 +19,15 @@
 
 # Alternative deployement for bookies. It uses Local Persistent Volumes and a 
 # SateFul Set in order to schedule bookies on nodes that can provide a local
-# fast storage for bookies.
+# fast storage attached to the nodes the bookies are scheduled on.
 
 # This method assumes that :
 # 1. Nodes that can provide local fast storage and host bookies are labelled (ex: has-local-fast-storage=yes)
 #    Example : kubectl label nodes <node-name> has-local-fast-storage=yes
 # 2. A storage class that allows bookies to claim fast local storage is defined (ex: fast-local)
-#    Example : Cf. ../Storage/fast-local-storage-class.yaml
+#    Example : Cf. .fast-local-storage-class.yaml
 
+# ConfigMap from the official bookie deployment with predefined values
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -40,6 +41,7 @@ data:
 ---
 
 # The service that oversees the bookies must exist before the Stateful set is created
+# Values are the same as the official bookie deployment
 
 ##
 ## Define the Bookie headless service
@@ -63,8 +65,20 @@ spec:
         component: bookkeeper
 ---
 
-## BookKeeper servers need to access the local disks and the pods
-## cannot be moved across different nodes.
+# Define a Stateful Set that will schedule bookies on nodes that can provide local
+# persistent volumes. The volumes are bound after the scheduling of the bookie on 
+# a node. The Stateful Set defines a sticky identity for each bookie. When a bookie
+# need to be rescheduled, it will be scheduled on the same node with the same volumes.
+
+# The rules for bookie scheduling are :
+# 1. The node has the right label that indicates that it can provide local fast storage
+# 2. The node do not host another bookie
+
+# Only one replicas is defined. You must not ask for more replicas than your cluster can initially
+# handle (you will run in troubles). After the initial deployment, you can scale the Stateful Set. If
+# you ask for more bookies than your cluster can handle, the additionnal bookies will be pending because
+# no nodes can host them or provide them the storage the bookies need (but everything will continue to be OK).
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -83,7 +97,7 @@ spec:
             app: pulsar
             component: bookkeeper
             # Specify cluster to allow aggregation by cluster in
-            # the metrics
+            # the metrics - Same values as official
             cluster: local
         annotations:
             prometheus.io/scrape: "true"

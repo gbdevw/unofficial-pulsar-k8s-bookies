@@ -17,28 +17,12 @@
 # under the License.
 #
 
-apiVersion: v1
-kind: Pod
+# Storage class for local persistent volumes attached to local SSDs
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
 metadata:
-    name: pulsar-admin
-spec:
-    containers:
-      - name: pulsar-admin
-        image: apachepulsar/pulsar:latest
-        command: ["sh", "-c"]
-        args:
-          - >
-            bin/apply-config-from-env.py conf/client.conf &&
-            bin/apply-config-from-env.py conf/pulsar_env.sh &&
-            bin/apply-config-from-env.py conf/pulsar_tools_env.sh &&
-            sleep 10000000000
-        envFrom:
-          - configMapRef:
-                name: broker-config
-        env:
-          - name: webServiceUrl
-            value: "http://proxy:8080/"
-          - name: brokerServiceUrl
-            value: "pulsar://proxy:6650/"
-          - name: PULSAR_MEM
-            value: "\"-Xms64m -Xmx128m\""
+  name: fast-local
+provisioner: kubernetes.io/no-provisioner
+# Bind the pvc once the pod is scheduled in order to make
+# topology-aware storage bindings.
+volumeBindingMode: WaitForFirstConsumer

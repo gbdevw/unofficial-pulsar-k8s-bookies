@@ -17,26 +17,12 @@
 # under the License.
 #
 
-apiVersion: batch/v1
-kind: Job
+# Default class for local persistent volumes
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
 metadata:
-  name: pulsar-cluster-metadata-init
-  labels:
-    app: pulsar
-    component: broker
-spec:
-  template:
-    spec:
-      containers:
-        - name: pulsar-cluster-metadata-init-container
-          image: apachepulsar/pulsar:latest
-          command: ["sh", "-c"]
-          args:
-            - >
-              bin/pulsar initialize-cluster-metadata \
-                --cluster local \
-                --zookeeper zookeeper \
-                --configuration-store zookeeper \
-                --web-service-url http://broker.default.svc.cluster.local:8080/ \
-                --broker-service-url pulsar://broker.default.svc.cluster.local:6650/ || true;
-      restartPolicy: Never
+  name: standard-local
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
