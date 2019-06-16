@@ -1,4 +1,4 @@
-## Unofficial alternative deployement for Apache Pulsar Bookies on Kubernetes
+## Unofficial alternative deployment for Apache Pulsar Bookies on Kubernetes
 Alternative method to deploy bookies for Apache Pulsar on Kubernetes using Local Persistent Volumes and Stateful Sets.
 
 ### Problem & Motivation
