@@ -115,3 +115,11 @@ kubectl apply -f https://raw.githubusercontent.com/guillaume-braibant/unofficial
 ```bash
 kubectl scale statefulset bookie --replicas=2
 ```
+
+### Known issues
+
+1. You must NOT ask for more bookies than your cluster can initially handle
+
+For example, if your cluster can handle two bookies and that you ask for 3 replicas during the INITIAL deployment of the stateful set, you will run into troubles : Bookies will be stuck in a crash loop (reason unknown).
+
+However, if you scale the stateful set and ask for more bookies than the cluster can handle, bookies will continue to be OK. Unnecessary bookies will remain in pending state until some node become elligible for their scheduling.
