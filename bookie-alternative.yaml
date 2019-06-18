@@ -181,7 +181,11 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 10Gi
+            # Default journal config. for bookkeeper specify that 5 journals
+            # of 2 GB should be kept (journalMaxSizeMB & journalMaxBackups) 
+            # You need enough space to handle it if you do not want your
+            # bookie to crash.
+            storage: 12Gi
         storageClassName: fast-local
     # Local persistent volume claim for the ledgers
     - metadata:
