@@ -5,7 +5,7 @@ Alternative method to deploy bookies for Apache Pulsar on Kubernetes using Local
 
 The current provided way to deploy Apache Pulsar Bookies uses a Demon Set to deploy one bookie on each node of your K8S cluster and HostPath volumes to provide local storage needed by the bookies. This method poses several potential problems :
 
-1. You cannot choose which nodes are eligible for bookie scheduling
+1. You cannot choose which nodes are elligible for bookie scheduling
 2. You cannot choose the number of bookies you deploy nor the number of bookie each node will host
 3. HostPath requires that you can use a directory/partition/disk the same way one each node. This is not always true
 4. HostPath do not use K8S mechanisms to manage storage (Persistent Volumes & Persistent Volume Claims) 
@@ -26,7 +26,7 @@ Here are the abstract steps to use the proposed method :
 
 The scheduling rules are :
 
-1. Bookies are scheudled on nodes that are labelled and signal that they can provide local storage / host bookies
+1. Bookies are scheduled on nodes that are labelled and signal that they can provide local storage / host bookies
 2. Only one bookie is allowed per node (this can be changed to allow multiple bookies on the same node)
 
 Once the bookie is scheduled, a local storage attached to the node the bookie is scheduled on is bound. The Stateful Set provides a sticky identity to the bookie. If the bookie needs to be rescheduled, it will be rescheduled on the same node with the same storage.
@@ -123,3 +123,9 @@ kubectl scale statefulset bookie --replicas=2
 For example, if your cluster can handle two bookies and that you ask for 3 replicas during the INITIAL deployment of the stateful set, you will run into troubles : Bookies will be stuck in a crash loop (reason unknown).
 
 However, if you scale the stateful set and ask for more bookies than the cluster can handle, bookies will continue to be OK. Unnecessary bookies will remain in pending state until some node become elligible for their scheduling.
+
+### Pitfalls
+
+1. Be sure to require/allocate enough storage for the bookie journal
+
+Default bookie journal configuration requires to keep 5 files (journalMaxSizeMB) of 2GB (journalMaxSizeMB). Thus, storage dedicated to bookie journal should provide more than 10GB if you use default configuration. When a bookie does not have enough space to keep all journals, it crashes.
