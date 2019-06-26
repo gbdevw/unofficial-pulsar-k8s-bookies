@@ -124,8 +124,24 @@ For example, if your cluster can handle two bookies and that you ask for 3 repli
 
 However, if you scale the stateful set and ask for more bookies than the cluster can handle, bookies will continue to be OK. Unnecessary bookies will remain in pending state until some node become elligible for their scheduling.
 
+2. There is not automatic clean up of disks once the claim for a local persistent volume is deleted
+
+To reclaim storage space on your disks, you first need to delete the persistent volume claims that are bound to your local persistent volumes. Then, you have to manually clean your disks.
+
+A project is currently developed in order to allow automatic provisionning of local persistent volumes and automatic disk clean up once the persistent volume claim bound to the local persistent volume is deleted (you still have to manually delete the pvc).
+
+https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner
+
 ### Pitfalls
 
 1. Be sure to require/allocate enough storage for the bookie journal
 
 Default bookie journal configuration requires to keep 5 files (journalMaxSizeMB) of 2GB (journalMaxSizeMB). Thus, storage dedicated to bookie journal should provide more than 10GB if you use default configuration. When a bookie does not have enough space to keep all journals, it crashes.
+
+2. Be sure to require and allocate enough storage for the bookie ledgers
+
+Default bookie journal configuration require a minimal storage space available (1 or 2GB if I remeber) in order to create a ledger. Once a bookie run out of storage and cannot create new ledgers, it switches in read-only mode. If all your bookies are in read-only modes, you will not be able to send more messages through Pulsar. Be sure to allocate/require enough storage to handle your load.
+
+### Tuning
+
+This script relies on affinity rules to tune the scheduling of bookies (strict 1 bookie per bookie node). There are a lot of affinity rules you can prefer to those that are used. In the next Kubernetes versions, more affinity rules will be added. They might fit better your use case.
